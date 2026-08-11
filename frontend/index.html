@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auth Dashboard</title>
+</head>
+<body>
+    <div id="app">
+        <!-- Register Section -->
+        <div id="register-section">
+            <h2>Register</h2>
+            <input type="text" id="reg-user" placeholder="Username">
+            <input type="password" id="reg-pass" placeholder="Password">
+            <button onclick="register()">Register</button>
+        </div>
+
+        <!-- Login Section -->
+        <div id="login-section">
+            <h2>Login</h2>
+            <input type="text" id="log-user" placeholder="Username">
+            <input type="password" id="log-pass" placeholder="Password">
+            <button onclick="login()">Login</button>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" style="display:none;">
+            <h2>Dashboard Home</h2>
+            <p>Welcome, you are logged in!</p>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        async function register() {
+            const username = document.getElementById('reg-user').value;
+            const password = document.getElementById('reg-pass').value;
+            const res = await fetch('http://localhost:5000/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            alert(data.message);
+        }
+
+        async function login() {
+            const username = document.getElementById('log-user').value;
+            const password = document.getElementById('log-pass').value;
+            const res = await fetch('http://localhost:5000/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                alert(data.message);
+                document.getElementById('register-section').style.display = 'none';
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('dashboard-section').style.display = 'block';
+            } else {
+                alert(data.message);
+            }
+        }
+
+        function logout() {
+            document.getElementById('register-section').style.display = 'block';
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('dashboard-section').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
